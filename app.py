@@ -1,19 +1,23 @@
 from flask import Flask, request, jsonify
 import os
 import requests
+from flask_cors import CORS
 from dotenv import load_dotenv
 
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-SUPABASE_BUCKET = "flipbooks"
+SUPABASE_BUCKET = "flippro-files"
+SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
 @app.route('/')
 def index():
     return "FlipPro Backend is Live!"
+
 
 @app.route('/upload', methods=['POST'])
 def upload_pdf():
@@ -38,7 +42,6 @@ def upload_pdf():
         return jsonify({"message": "Uploaded!", "url": public_url})
     else:
         return jsonify({"error": "Upload failed", "details": response.text}), 500
-
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")
